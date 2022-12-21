@@ -19,6 +19,3 @@ eureka:
     fetch-registry: true
     service-url:
       defaultZone: ${EUREKA_SERVER_URI}
-
-server:
-  port: 3000

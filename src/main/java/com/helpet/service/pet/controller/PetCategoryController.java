@@ -1,17 +1,18 @@
-package com.helpet.service.pet.web.controller;
+package com.helpet.service.pet.controller;
 
 import com.helpet.security.Role;
+import com.helpet.service.pet.dto.request.CreatePetCategoryRequest;
+import com.helpet.service.pet.dto.request.CreateSpeciesRequest;
 import com.helpet.service.pet.service.PetCategoryService;
 import com.helpet.service.pet.service.SpeciesService;
-import com.helpet.service.pet.store.model.PetCategory;
-import com.helpet.service.pet.store.model.Species;
-import com.helpet.service.pet.web.dto.request.CreatePetCategoryRequest;
-import com.helpet.service.pet.web.dto.request.CreateSpeciesRequest;
-import com.helpet.service.pet.web.mapper.PetCategoryMapper;
-import com.helpet.service.pet.web.mapper.SpeciesMapper;
+import com.helpet.service.pet.storage.model.PetCategory;
+import com.helpet.service.pet.storage.model.Species;
+import com.helpet.service.pet.mapper.PetCategoryMapper;
+import com.helpet.service.pet.mapper.SpeciesMapper;
 import com.helpet.web.response.ResponseBody;
 import com.helpet.web.response.SuccessfulResponseBody;
 import jakarta.annotation.security.RolesAllowed;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -52,8 +53,8 @@ public class PetCategoryController {
 
     @RolesAllowed(Role.ADMIN)
     @PostMapping
-    public ResponseEntity<ResponseBody> createPetCategory(@RequestBody CreatePetCategoryRequest request) {
-        PetCategory newPetCategory = petCategoryService.createPetCategory(request);
+    public ResponseEntity<ResponseBody> createPetCategory(@RequestBody @Valid CreatePetCategoryRequest createPetCategoryRequest) {
+        PetCategory newPetCategory = petCategoryService.createPetCategory(createPetCategoryRequest);
         ResponseBody responseBody = new SuccessfulResponseBody<>(petCategoryMapper.map(newPetCategory));
         return new ResponseEntity<>(responseBody, HttpStatus.CREATED);
     }
@@ -70,8 +71,8 @@ public class PetCategoryController {
     @RolesAllowed(Role.ADMIN)
     @PostMapping("/{pet-category-id}/species")
     public ResponseEntity<ResponseBody> createCategorySpecies(@PathVariable("pet-category-id") Integer petCategoryId,
-                                                              @RequestBody CreateSpeciesRequest request) {
-        Species newSpecies = speciesService.createSpecies(petCategoryId, request);
+                                                              @RequestBody @Valid CreateSpeciesRequest createSpeciesRequest) {
+        Species newSpecies = speciesService.createSpecies(petCategoryId, createSpeciesRequest);
         ResponseBody responseBody = new SuccessfulResponseBody<>(speciesMapper.map(newSpecies));
         return new ResponseEntity<>(responseBody, HttpStatus.CREATED);
     }

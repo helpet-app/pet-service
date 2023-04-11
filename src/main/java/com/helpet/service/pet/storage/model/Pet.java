@@ -36,8 +36,8 @@ public class Pet {
     @Column(name = "date_of_birth")
     private LocalDate dateOfBirth;
 
-    @Column(name = "is_sterilized")
-    private Boolean isSterilized;
+    @Column(name = "is_spayed_or_neutered")
+    private Boolean isSpayedOrNeutered;
 
     @Column(name = "chip_number", length = Integer.MAX_VALUE)
     private String chipNumber;

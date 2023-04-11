@@ -1,6 +1,6 @@
-package com.helpet.service.pet.store.repository;
+package com.helpet.service.pet.storage.repository;
 
-import com.helpet.service.pet.store.model.PetFeature;
+import com.helpet.service.pet.storage.model.PetFeature;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

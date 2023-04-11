@@ -1,6 +1,6 @@
-package com.helpet.service.pet.web.dto.response;
+package com.helpet.service.pet.dto.response;
 
-import com.helpet.service.pet.store.model.*;
+import com.helpet.service.pet.storage.model.Gender;
 import lombok.Data;
 
 import java.time.LocalDate;
@@ -14,11 +14,11 @@ public class MedicalCardResponse {
 
     private String avatarUrl;
 
-    private Sex sex;
+    private Gender gender;
 
     private LocalDate dateOfBirth;
 
-    private Boolean isSterilized;
+    private Boolean isSpayedOrNeutered;
 
     private String chipNumber;
 

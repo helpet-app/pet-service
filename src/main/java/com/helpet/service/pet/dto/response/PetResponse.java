@@ -1,4 +1,4 @@
-package com.helpet.service.pet.web.dto.response;
+package com.helpet.service.pet.dto.response;
 
 import lombok.Data;
 
@@ -12,7 +12,9 @@ public class PetResponse {
 
     private String avatarUrl;
 
-    private FamilyResponse family;
+    private PetFamilyResponse family;
 
     private PetCategoryResponse petCategory;
+
+    private SpeciesResponse species;
 }

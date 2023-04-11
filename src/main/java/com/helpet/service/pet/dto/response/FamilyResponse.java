@@ -1,4 +1,4 @@
-package com.helpet.service.pet.web.dto.response;
+package com.helpet.service.pet.dto.response;
 
 import lombok.Data;
 
@@ -9,4 +9,6 @@ public class FamilyResponse {
     private UUID id;
 
     private String name;
+
+    private FamilyMemberResponse createdBy;
 }

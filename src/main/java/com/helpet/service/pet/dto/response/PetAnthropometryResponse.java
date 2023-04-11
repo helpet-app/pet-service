@@ -1,4 +1,4 @@
-package com.helpet.service.pet.web.dto.response;
+package com.helpet.service.pet.dto.response;
 
 import lombok.Data;
 
@@ -6,7 +6,7 @@ import java.time.OffsetDateTime;
 import java.util.UUID;
 
 @Data
-public class AnthropometryResponse {
+public class PetAnthropometryResponse {
     private UUID id;
 
     private Double height;

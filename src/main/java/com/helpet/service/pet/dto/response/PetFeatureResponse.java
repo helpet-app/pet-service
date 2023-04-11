@@ -1,4 +1,4 @@
-package com.helpet.service.pet.web.dto.response;
+package com.helpet.service.pet.dto.response;
 
 import lombok.Data;
 

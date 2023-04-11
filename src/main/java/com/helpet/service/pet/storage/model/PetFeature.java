@@ -1,4 +1,4 @@
-package com.helpet.service.pet.store.model;
+package com.helpet.service.pet.storage.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -6,7 +6,7 @@ import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
-import java.time.LocalDate;
+import java.time.OffsetDateTime;
 import java.util.UUID;
 
 @Builder
@@ -15,25 +15,25 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "vaccination_history", indexes = {
-        @Index(name = "vaccination_history_pet_fkey", columnList = "pet_id")
-})
-public class Vaccination {
+@Table(name = "pet_features")
+public class PetFeature {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "id", nullable = false)
     private UUID id;
 
     @NotNull
-    @Column(name = "vaccination_name", nullable = false, length = Integer.MAX_VALUE)
-    private String vaccinationName;
-
-    @Column(name = "comment", length = Integer.MAX_VALUE)
-    private String comment;
+    @Column(name = "name", nullable = false, length = Integer.MAX_VALUE)
+    private String name;
 
     @NotNull
-    @Column(name = "vaccinated_on", nullable = false)
-    private LocalDate vaccinatedOn;
+    @Column(name = "description", nullable = false, length = Integer.MAX_VALUE)
+    private String description;
+
+    @Builder.Default
+    @NotNull
+    @Column(name = "created_at", nullable = false)
+    private OffsetDateTime createdAt = OffsetDateTime.now();
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

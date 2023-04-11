@@ -1,4 +1,4 @@
-package com.helpet.service.pet.store.model;
+package com.helpet.service.pet.storage.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -6,6 +6,7 @@ import lombok.*;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
+import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.util.UUID;
 
@@ -15,25 +16,23 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "anthropometry_history", indexes = {
-        @Index(name = "anthropometry_history_pet_fkey", columnList = "pet_id")
-})
-public class Anthropometry {
+@Table(name = "pet_vaccination_history")
+public class PetVaccination {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id", nullable = false)
     private UUID id;
 
     @NotNull
-    @Column(name = "height", nullable = false)
-    private Double height;
-
-    @NotNull
-    @Column(name = "weight", nullable = false)
-    private Double weight;
+    @Column(name = "vaccination_name", nullable = false, length = Integer.MAX_VALUE)
+    private String vaccinationName;
 
     @Column(name = "comment", length = Integer.MAX_VALUE)
     private String comment;
+
+    @NotNull
+    @Column(name = "vaccinated_on", nullable = false)
+    private LocalDate vaccinatedOn;
 
     @Builder.Default
     @NotNull

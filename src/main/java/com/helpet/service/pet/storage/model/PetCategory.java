@@ -1,4 +1,4 @@
-package com.helpet.service.pet.store.model;
+package com.helpet.service.pet.storage.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -13,9 +13,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "pet_categories", indexes = {
-        @Index(name = "pet_categories_name_key", columnList = "name", unique = true)
-})
+@Table(name = "pet_categories")
 public class PetCategory {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

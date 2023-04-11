@@ -1,4 +1,4 @@
-package com.helpet.service.pet.store.model;
+package com.helpet.service.pet.storage.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -7,6 +7,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import java.time.LocalDate;
+import java.time.OffsetDateTime;
 import java.util.UUID;
 
 @Builder
@@ -15,12 +16,10 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "disease_history", indexes = {
-        @Index(name = "disease_history_pet_fkey", columnList = "pet_id")
-})
-public class Disease {
+@Table(name = "pet_disease_history")
+public class PetDisease {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id", nullable = false)
     private UUID id;
 
@@ -37,6 +36,11 @@ public class Disease {
 
     @Column(name = "recovered_on")
     private LocalDate recoveredOn;
+
+    @Builder.Default
+    @NotNull
+    @Column(name = "created_at", nullable = false)
+    private OffsetDateTime createdAt = OffsetDateTime.now();
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)

@@ -1,4 +1,4 @@
-package com.helpet.service.pet.store.model;
+package com.helpet.service.pet.storage.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -15,22 +15,23 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "pet_features", indexes = {
-        @Index(name = "pet_features_pet_fkey", columnList = "pet_id")
-})
-public class PetFeature {
+@Table(name = "pet_anthropometry_history")
+public class PetAnthropometry {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.UUID)
     @Column(name = "id", nullable = false)
     private UUID id;
 
     @NotNull
-    @Column(name = "name", nullable = false, length = Integer.MAX_VALUE)
-    private String name;
+    @Column(name = "height", nullable = false)
+    private Double height;
 
     @NotNull
-    @Column(name = "description", nullable = false, length = Integer.MAX_VALUE)
-    private String description;
+    @Column(name = "weight", nullable = false)
+    private Double weight;
+
+    @Column(name = "comment", length = Integer.MAX_VALUE)
+    private String comment;
 
     @Builder.Default
     @NotNull

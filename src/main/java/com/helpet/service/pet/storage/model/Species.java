@@ -1,8 +1,10 @@
-package com.helpet.service.pet.store.model;
+package com.helpet.service.pet.storage.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 @Builder
 @Getter
@@ -10,9 +12,7 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "species", indexes = {
-        @Index(name = "species_name_pet_category_id_key", columnList = "name, pet_category_id", unique = true)
-})
+@Table(name = "species")
 public class Species {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,6 +25,7 @@ public class Species {
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "pet_category_id", nullable = false)
     private PetCategory petCategory;
 }

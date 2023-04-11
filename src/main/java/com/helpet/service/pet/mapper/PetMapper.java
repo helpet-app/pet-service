@@ -1,7 +1,7 @@
-package com.helpet.service.pet.web.mapper;
+package com.helpet.service.pet.mapper;
 
-import com.helpet.service.pet.store.model.Pet;
-import com.helpet.service.pet.web.dto.response.PetResponse;
+import com.helpet.service.pet.dto.response.PetResponse;
+import com.helpet.service.pet.storage.model.Pet;
 import com.helpet.web.mapper.ClassMapper;
 import org.mapstruct.Mapper;
 

@@ -5,6 +5,7 @@ import com.helpet.exception.NotFoundLocalizedException;
 import com.helpet.service.pet.dto.request.AddFamilyMemberRequest;
 import com.helpet.service.pet.dto.request.AddPetToFamilyRequest;
 import com.helpet.service.pet.dto.request.CreateFamilyRequest;
+import com.helpet.service.pet.dto.request.UpdateFamilyRequest;
 import com.helpet.service.pet.service.error.ForbiddenLocalizedError;
 import com.helpet.service.pet.service.error.NotFoundLocalizedError;
 import com.helpet.service.pet.storage.model.Account;
@@ -100,6 +101,21 @@ public class FamilyService {
                                  .build();
 
         return familyRepository.save(newFamily);
+    }
+
+
+    public Family updateFamily(UUID userId, UUID familyId, UpdateFamilyRequest familyInfo) {
+        Family family = getUserFamily(userId, familyId);
+
+        family.setName(familyInfo.getName());
+
+        return familyRepository.save(family);
+    }
+
+    public void deleteFamily(UUID userId, UUID familyId) {
+        Family family = getUserFamily(userId, familyId);
+
+        familyRepository.delete(family);
     }
 
     public void addFamilyMember(UUID userId,

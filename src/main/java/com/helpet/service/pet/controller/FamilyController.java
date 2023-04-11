@@ -4,6 +4,7 @@ import com.helpet.security.jwt.JwtPayloadExtractor;
 import com.helpet.service.pet.dto.request.AddFamilyMemberRequest;
 import com.helpet.service.pet.dto.request.AddPetToFamilyRequest;
 import com.helpet.service.pet.dto.request.CreateFamilyRequest;
+import com.helpet.service.pet.dto.request.UpdateFamilyRequest;
 import com.helpet.service.pet.mapper.FamilyMapper;
 import com.helpet.service.pet.mapper.FamilyMemberMapper;
 import com.helpet.service.pet.mapper.FamilyPetMapper;
@@ -68,6 +69,25 @@ public class FamilyController {
         Family family = familyService.createFamily(userId, createFamilyRequest);
         ResponseBody responseBody = new SuccessfulResponseBody<>(familyMapper.map(family));
         return new ResponseEntity<>(responseBody, HttpStatus.CREATED);
+    }
+
+    @PutMapping("/{family-id}")
+    public ResponseEntity<ResponseBody> updateFamily(@PathVariable("family-id") UUID familyId,
+                                                     @RequestBody @Valid UpdateFamilyRequest updateFamilyRequest,
+                                                     JwtAuthenticationToken jwtAuthenticationToken) {
+        UUID userId = JwtPayloadExtractor.extractSubject(jwtAuthenticationToken.getToken());
+        Family family = familyService.updateFamily(userId, familyId, updateFamilyRequest);
+        ResponseBody responseBody = new SuccessfulResponseBody<>(familyMapper.map(family));
+        return new ResponseEntity<>(responseBody, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{family-id}")
+    public ResponseEntity<ResponseBody> deleteFamily(@PathVariable("family-id") UUID familyId,
+                                                     JwtAuthenticationToken jwtAuthenticationToken) {
+        UUID userId = JwtPayloadExtractor.extractSubject(jwtAuthenticationToken.getToken());
+        familyService.deleteFamily(userId, familyId);
+        ResponseBody responseBody = new SuccessfulResponseBody<>();
+        return new ResponseEntity<>(responseBody, HttpStatus.OK);
     }
 
     @GetMapping("/{family-id}/members")

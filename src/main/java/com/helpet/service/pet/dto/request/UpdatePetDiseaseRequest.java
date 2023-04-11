@@ -1,14 +1,11 @@
-package com.helpet.service.pet.web.dto.response;
+package com.helpet.service.pet.dto.request;
 
 import lombok.Data;
 
 import java.time.LocalDate;
-import java.util.UUID;
 
 @Data
-public class DiseaseResponse {
-    private UUID id;
-
+public class UpdatePetDiseaseRequest {
     private String diseaseName;
 
     private String comment;

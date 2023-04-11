@@ -1,9 +1,9 @@
-package com.helpet.service.pet.web.dto.request;
+package com.helpet.service.pet.dto.request;
 
 import lombok.Data;
 
 @Data
-public class CreateAnthropometryRequest {
+public class UpdatePetAnthropometryRequest {
     private Double height;
 
     private Double weight;

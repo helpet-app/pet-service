@@ -108,12 +108,12 @@ public class FamilyController {
         return new ResponseEntity<>(responseBody, HttpStatus.CREATED);
     }
 
-    @DeleteMapping("/{family-id}/members/{member-id}")
+    @DeleteMapping("/{family-id}/members/{member-username}")
     public ResponseEntity<ResponseBody> removeFamilyMember(@PathVariable("family-id") UUID familyId,
-                                                           @PathVariable("member-id") UUID memberId,
+                                                           @PathVariable("member-username") String memberUsername,
                                                            JwtAuthenticationToken jwtAuthenticationToken) {
         UUID userId = JwtPayloadExtractor.extractSubject(jwtAuthenticationToken.getToken());
-        familyService.removeFamilyMember(userId, familyId, memberId);
+        familyService.removeFamilyMember(userId, familyId, memberUsername);
         ResponseBody responseBody = new SuccessfulResponseBody<>();
         return new ResponseEntity<>(responseBody, HttpStatus.OK);
     }

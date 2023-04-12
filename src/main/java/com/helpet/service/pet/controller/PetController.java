@@ -46,7 +46,7 @@ public class PetController {
     @GetMapping("/{pet-id}")
     public ResponseEntity<ResponseBody> getPet(@PathVariable("pet-id") UUID petId, JwtAuthenticationToken jwtAuthenticationToken) {
         UUID userId = JwtPayloadExtractor.extractSubject(jwtAuthenticationToken.getToken());
-        Pet pet = petService.getUserPet(userId, petId);
+        Pet pet = petService.getDetailedUserPet(userId, petId);
         ResponseBody responseBody = new SuccessfulResponseBody<>(petMapper.map(pet));
         return new ResponseEntity<>(responseBody, HttpStatus.OK);
     }
@@ -63,12 +63,12 @@ public class PetController {
     @GetMapping("/{pet-id}/medical-card")
     public ResponseEntity<ResponseBody> getPetMedicalCard(@PathVariable("pet-id") UUID petId, JwtAuthenticationToken jwtAuthenticationToken) {
         UUID userId = JwtPayloadExtractor.extractSubject(jwtAuthenticationToken.getToken());
-        Pet pet = petService.getUserPet(userId, petId);
+        Pet pet = petService.getDetailedUserPet(userId, petId);
         ResponseBody responseBody = new SuccessfulResponseBody<>(medicalCardMapper.map(pet));
         return new ResponseEntity<>(responseBody, HttpStatus.OK);
     }
 
-    @PatchMapping("/{pet-id}/medical-card")
+    @PutMapping("/{pet-id}/medical-card")
     public ResponseEntity<ResponseBody> updatePetMedicalCard(@PathVariable("pet-id") UUID petId,
                                                              @RequestBody @Valid UpdateMedicalCardRequest request,
                                                              JwtAuthenticationToken jwtAuthenticationToken) {

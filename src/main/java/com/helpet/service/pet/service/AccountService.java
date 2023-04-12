@@ -26,4 +26,9 @@ public class AccountService {
         return accountRepository.findAccountById(accountId)
                                 .orElseThrow(() -> new NotFoundLocalizedException(NotFoundLocalizedError.ACCOUNT_DOES_NOT_EXIST));
     }
+
+    public Account getAccountByUsername(String username) throws NotFoundLocalizedException {
+        return accountRepository.findAccountByUsernameIgnoreCase(username)
+                                .orElseThrow(() -> new NotFoundLocalizedException(NotFoundLocalizedError.ACCOUNT_DOES_NOT_EXIST));
+    }
 }

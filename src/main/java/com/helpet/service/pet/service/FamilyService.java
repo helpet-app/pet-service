@@ -1,11 +1,13 @@
 package com.helpet.service.pet.service;
 
+import com.helpet.exception.ConflictLocalizedException;
 import com.helpet.exception.ForbiddenLocalizedException;
 import com.helpet.exception.NotFoundLocalizedException;
 import com.helpet.service.pet.dto.request.AddFamilyMemberRequest;
 import com.helpet.service.pet.dto.request.AddPetToFamilyRequest;
 import com.helpet.service.pet.dto.request.CreateFamilyRequest;
 import com.helpet.service.pet.dto.request.UpdateFamilyRequest;
+import com.helpet.service.pet.service.error.ConflictLocalizedError;
 import com.helpet.service.pet.service.error.ForbiddenLocalizedError;
 import com.helpet.service.pet.service.error.NotFoundLocalizedError;
 import com.helpet.service.pet.storage.model.Account;
@@ -16,10 +18,7 @@ import com.helpet.service.pet.storage.repository.FamilyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.Comparator;
-import java.util.List;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class FamilyService {
@@ -126,7 +125,7 @@ public class FamilyService {
             throw new ForbiddenLocalizedException(ForbiddenLocalizedError.ONLY_FAMILY_OWNER_CAN_ADD_MEMBER);
         }
 
-        Account member = accountService.getAccount(familyMemberInfo.getMemberId());
+        Account member = accountService.getAccountByUsername(familyMemberInfo.getUsername());
 
         userFamily.getMembers().add(member);
 
@@ -135,37 +134,50 @@ public class FamilyService {
 
     public void removeFamilyMember(UUID userId,
                                    UUID familyId,
-                                   UUID memberId) throws NotFoundLocalizedException, ForbiddenLocalizedException {
+                                   String memberUsername) throws NotFoundLocalizedException, ForbiddenLocalizedException {
         Family userFamily = getUserFamilyWithMembers(userId, familyId);
         if (!userFamily.getCreatedBy().getId().equals(userId)) {
             throw new ForbiddenLocalizedException(ForbiddenLocalizedError.ONLY_FAMILY_OWNER_CAN_REMOVE_MEMBER);
         }
 
-        userFamily.getMembers().removeIf(member -> member.getId().equals(memberId));
-
+        Account member = accountService.getAccountByUsername(memberUsername);
+        userFamily.getMembers().remove(member);
         familyRepository.save(userFamily);
+
+        for (Pet memberPet : petService.getUserPets(member.getId())) {
+            if (Objects.nonNull(memberPet.getFamily()) && memberPet.getFamily().getId().equals(familyId)) {
+                memberPet.setFamily(null);
+                petService.savePet(memberPet);
+            }
+        }
     }
 
-    public void addPetToFamily(UUID userId, UUID familyId, AddPetToFamilyRequest petInfo) {
-        Family userFamily = getUserFamilyWithPets(userId, familyId);
-        if (!userFamily.getCreatedBy().getId().equals(userId)) {
-            throw new ForbiddenLocalizedException(ForbiddenLocalizedError.ONLY_FAMILY_OWNER_CAN_ADD_PET);
+    public void addPetToFamily(UUID userId,
+                               UUID familyId,
+                               AddPetToFamilyRequest petInfo) throws NotFoundLocalizedException, ConflictLocalizedException {
+        Pet pet = petService.getUserPet(userId, petInfo.getPetId());
+
+        if (Objects.nonNull(pet.getFamily())) {
+            throw new ConflictLocalizedException(ConflictLocalizedError.PET_ALREADY_HAS_FAMILY);
         }
 
-        Pet pet = petService.getUserPet(userId, petInfo.getPetId());
+        Family userFamily = getUserFamilyWithPets(userId, familyId);
+
         pet.setFamily(userFamily);
         userFamily.getPets().add(pet);
 
         familyRepository.save(userFamily);
     }
 
-    public void removePetFromFamily(UUID userId, UUID familyId, UUID petId) {
+    public void removePetFromFamily(UUID userId, UUID familyId, UUID petId) throws NotFoundLocalizedException {
         Family userFamily = getUserFamilyWithPets(userId, familyId);
-        if (!userFamily.getCreatedBy().getId().equals(userId)) {
-            throw new ForbiddenLocalizedException(ForbiddenLocalizedError.ONLY_FAMILY_OWNER_CAN_REMOVE_PET);
-        }
 
         Pet pet = petService.getUserPet(userId, petId);
+
+        if (!userFamily.getPets().contains(pet)) {
+            throw new NotFoundLocalizedException(NotFoundLocalizedError.FAMILY_DOES_NOT_HAVE_THIS_PET);
+        }
+
         pet.setFamily(null);
         userFamily.getPets().remove(pet);
 

@@ -5,7 +5,6 @@ import com.helpet.exception.ForbiddenLocalizedException;
 import com.helpet.exception.NotFoundLocalizedException;
 import com.helpet.service.pet.dto.request.CreatePetRequest;
 import com.helpet.service.pet.dto.request.UpdateMedicalCardRequest;
-import com.helpet.service.pet.service.error.ConflictLocalizedError;
 import com.helpet.service.pet.service.error.NotFoundLocalizedError;
 import com.helpet.service.pet.storage.model.Account;
 import com.helpet.service.pet.storage.model.Pet;
@@ -65,7 +64,17 @@ public class PetService {
             throw new NotFoundLocalizedException(NotFoundLocalizedError.USER_DOES_NOT_HAVE_THIS_PET);
         }
 
-        return petRepository.findPetById(petId).orElseThrow(() -> new NotFoundLocalizedException(NotFoundLocalizedError.PET_DOES_NOT_EXIST));
+        return petRepository.findPetById(petId)
+                            .orElseThrow(() -> new NotFoundLocalizedException(NotFoundLocalizedError.PET_DOES_NOT_EXIST));
+    }
+
+    public Pet getDetailedUserPet(UUID userId, UUID petId) throws NotFoundLocalizedException {
+        if (!userIsAssociatedWithPet(userId, petId)) {
+            throw new NotFoundLocalizedException(NotFoundLocalizedError.USER_DOES_NOT_HAVE_THIS_PET);
+        }
+
+        return petRepository.findDetailedPetById(petId)
+                            .orElseThrow(() -> new NotFoundLocalizedException(NotFoundLocalizedError.PET_DOES_NOT_EXIST));
     }
 
     public Pet createPet(UUID userId, CreatePetRequest petInfo) throws NotFoundLocalizedException {
@@ -88,39 +97,22 @@ public class PetService {
                                     UpdateMedicalCardRequest medicalCardInfo) throws NotFoundLocalizedException, ForbiddenLocalizedException, ConflictLocalizedException {
         Pet pet = getUserPet(userId, petId);
 
-        if (Objects.nonNull(medicalCardInfo.getName())) {
-            pet.setName(medicalCardInfo.getName());
-        }
+        pet.setName(medicalCardInfo.getName());
+        pet.setGender(medicalCardInfo.getGender());
+        pet.setDateOfBirth(medicalCardInfo.getDateOfBirth());
+        pet.setIsSpayedOrNeutered(medicalCardInfo.getIsSpayedOrNeutered());
+        pet.setChipNumber(medicalCardInfo.getChipNumber());
 
-        if (Objects.nonNull(medicalCardInfo.getGender())) {
-            pet.setGender(medicalCardInfo.getGender());
-        }
-
-        if (Objects.nonNull(medicalCardInfo.getDateOfBirth())) {
-            pet.setDateOfBirth(medicalCardInfo.getDateOfBirth());
-        }
-
-        if (Objects.nonNull(medicalCardInfo.getIsSpayedOrNeutered())) {
-            pet.setIsSpayedOrNeutered(medicalCardInfo.getIsSpayedOrNeutered());
-        }
-
-        if (Objects.nonNull(medicalCardInfo.getChipNumber())) {
-            pet.setChipNumber(medicalCardInfo.getChipNumber());
-        }
-
-        if (Objects.nonNull(medicalCardInfo.getPetCategoryId())) {
-            PetCategory petCategory = petCategoryService.getPetCategory(medicalCardInfo.getPetCategoryId());
-            pet.setPetCategory(petCategory);
-        }
-
-        if (Objects.nonNull(medicalCardInfo.getSpeciesId())) {
-            Species species = speciesService.getSpecies(medicalCardInfo.getSpeciesId());
-
-            if (!Objects.equals(species.getPetCategory(), pet.getPetCategory())) {
-                throw new ConflictLocalizedException(ConflictLocalizedError.SPECIES_DOES_NOT_BELONG_TO_PET_CATEGORY);
-            }
-
+        Integer speciesId = medicalCardInfo.getSpeciesId();
+        if (Objects.nonNull(speciesId)) {
+            Species species = speciesService.getSpecies(speciesId);
+            pet.setPetCategory(species.getPetCategory());
             pet.setSpecies(species);
+        } else {
+            Integer petCategoryId = medicalCardInfo.getPetCategoryId();
+            PetCategory petCategory = Objects.nonNull(petCategoryId) ? petCategoryService.getPetCategory(petCategoryId) : null;
+            pet.setPetCategory(petCategory);
+            pet.setSpecies(null);
         }
 
         return petRepository.save(pet);
@@ -130,5 +122,9 @@ public class PetService {
         Pet pet = getUserPet(userId, petId);
 
         petRepository.delete(pet);
+    }
+
+    public void savePet(Pet pet) {
+        petRepository.save(pet);
     }
 }

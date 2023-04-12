@@ -12,7 +12,8 @@ public enum NotFoundLocalizedError implements DefaultEnumLocalizedError {
     PET_DOES_NOT_HAVE_THIS_ANTHROPOMETRY,
     PET_DOES_NOT_HAVE_THIS_DISEASE,
     PET_DOES_NOT_HAVE_THIS_VACCINATION,
-    PET_DOES_NOT_HAVE_THIS_FEATURE;
+    PET_DOES_NOT_HAVE_THIS_FEATURE,
+    FAMILY_DOES_NOT_HAVE_THIS_PET;
 
     @Override
     public String getErrorKeyPrefix() {

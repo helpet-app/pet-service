@@ -5,7 +5,7 @@ import com.helpet.exception.util.DefaultEnumLocalizedError;
 public enum ConflictLocalizedError implements DefaultEnumLocalizedError {
     PET_CATEGORY_ALREADY_EXISTS,
     SPECIES_ALREADY_EXISTS,
-    SPECIES_DOES_NOT_BELONG_TO_PET_CATEGORY;
+    PET_ALREADY_HAS_FAMILY;
 
     @Override
     public String getErrorKeyPrefix() {

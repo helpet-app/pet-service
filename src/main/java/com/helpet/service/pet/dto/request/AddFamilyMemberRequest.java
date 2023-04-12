@@ -1,10 +1,10 @@
 package com.helpet.service.pet.dto.request;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
-
-import java.util.UUID;
 
 @Data
 public class AddFamilyMemberRequest {
-    private UUID memberId;
+    @NotBlank(message = "{validations.not-blank.username-cannot-be-blank}")
+    private String username;
 }

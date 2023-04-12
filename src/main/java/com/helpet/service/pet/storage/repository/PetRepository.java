@@ -13,12 +13,14 @@ import java.util.UUID;
 
 @Repository
 public interface PetRepository extends JpaRepository<Pet, UUID> {
+    Optional<Pet> findPetById(UUID petId);
+
     @EntityGraph(attributePaths = {
             "petCategory",
             "species",
             "family"
     })
-    Optional<Pet> findPetById(UUID petId);
+    Optional<Pet> findDetailedPetById(UUID petId);
 
     @Query(value = "SELECT * FROM find_all_pets_associated_with_user(:userId)", nativeQuery = true)
     List<UUID> findAllPetIdsAssociatedWithUser(UUID userId);
